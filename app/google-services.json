@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "208136955547",
+    "project_id": "vitae-12016",
+    "storage_bucket": "vitae-12016.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208136955547:android:9a7cb2639cfe02b55dc83e",
+        "android_client_info": {
+          "package_name": "com.example.vitae"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmEaosB4fIzugvEyB-dsjeGHov6hgrIFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

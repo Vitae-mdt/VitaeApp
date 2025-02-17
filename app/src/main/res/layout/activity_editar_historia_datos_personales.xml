@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditarHistoriaDatosPersonales">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reingresedatos"
+            android:hint="Reingrese sus datos personales"
+            android:textAlignment="center"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reingrese_nombre_completo"
+            android:hint="Nombre Completo"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reingrese_fecha_nacimiento"
+            android:hint="Fecha de Nacimiento (DD/MM/AAAA)"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reingrese_lugar_nacimiento"
+            android:hint="Lugar de Nacimiento (País, Ciudad)"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reingrese_altura"
+            android:hint="Altura en cm"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/peso"
+            android:hint="reingrese_Peso en kg"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reingrese_edad"
+            android:hint="Edad"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reingrese_correo_personal"
+            android:hint="Correo electronico personal"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reingrese_numero_casa"
+            android:hint="Numero de telefono local"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reingrese_numero_personal"
+            android:hint="Numero de telefono personal"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/reingrese_tipo_sangre"
+            android:hint="Tipo de sangre"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+
+        <Button
+            android:id="@+id/boton_datos_personales_reingreso"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:backgroundTint="@color/purple_200"
+            android:padding="9dp"
+            android:text="Actualizar Datos"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+
+            />
+
+        <Button
+            android:id="@+id/boton_cancelar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:backgroundTint="@color/purple_200"
+            android:padding="9dp"
+            android:text="Cancelar"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+
+            />
+
+    </LinearLayout>
+
+</ScrollView>

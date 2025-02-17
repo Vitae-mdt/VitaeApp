@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DashboardBluetooth">
+
+    <TextView
+        android:id="@+id/texto_bt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_200"
+        android:padding="9dp"
+        android:text="Compartir Via Bluetooth"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <Button
+        android:id="@+id/boton_enviar_uid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/purple_200"
+        android:padding="9dp"
+        android:text="Compartir datos via Bluetooth"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/texto_bt"
+        app:layout_constraintVertical_bias="0.251"
+        tools:layout_editor_absoluteX="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"/>
+
+    <Button
+        android:id="@+id/boton_volver_dashboard_compartir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/purple_200"
+        android:padding="9dp"
+        android:text="Volver a menú anterior"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/boton_enviar_uid"
+        app:layout_constraintVertical_bias="0.158"
+        tools:layout_editor_absoluteX="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"/>
+
+
+    <Button
+        android:id="@+id/boton_volver_dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/purple_200"
+        android:padding="9dp"
+        android:text="Volver a menú inicio"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/boton_volver_dashboard_compartir"
+        app:layout_constraintVertical_bias="0.25"
+        tools:layout_editor_absoluteX="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"/>
+
+    <TextView
+        android:id="@+id/texto_ayuda_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ayuda"
+        android:textAlignment="center"
+        android:textColor="@color/purple_200"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/boton_volver_dashboard" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

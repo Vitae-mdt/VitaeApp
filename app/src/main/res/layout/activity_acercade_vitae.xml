@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AcercadeVitae">
+
+    <TextView
+        android:id="@+id/texto_acerca_de"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/purple_200"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="Hola, ¡Bienvenido a Vitae App!"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.165"
+        android:background="@color/purple_200"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <TextView
+        android:id="@+id/texto_acerca_de2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/purple_200"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="Vitae es una aplicación desarrollada por dos estudiantes de Ing. en telecomunicaciones de la Universidad Católica Andrés Bello en colaboración con Meditron C.A. como proyecto final de grado."
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/texto_acerca_de"
+        app:layout_constraintVertical_bias="0.165"
+        android:background="@color/purple_200"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        tools:layout_editor_absoluteX="16dp"/>
+
+    <TextView
+        android:id="@+id/texto_acerca_de3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/purple_200"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="Esta aplicación nacio como una solución al reto de agilizar la creación de historias de pacientes para la realización de examenes de imageneología"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/texto_acerca_de2"
+        app:layout_constraintVertical_bias="0.102"
+        android:background="@color/purple_200"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <TextView
+        android:id="@+id/texto_acerca_de4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/purple_200"
+        android:gravity="center"
+        android:padding="20dp"
+        android:text="Esperamos que este proyecto sea de utilidad para todos los pacientes del mundo que desean una manera sencilla de registrarse en los diferentes centros de imageneología. Sin mas que añadir, ¡gracias por preferirnos!"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/texto_acerca_de3"
+        app:layout_constraintVertical_bias="0.2"
+        android:background="@color/purple_200"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <Button
+        android:id="@+id/boton_acerca_de"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/purple_200"
+        android:text="Regresar a Menú de Inicio"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/texto_acerca_de4" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Dahsboard">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="vertical"
+
+        >
+
+        <TextView
+            android:id="@+id/TextoBienvenida"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@color/purple_200"
+            android:padding="9dp"
+            android:text="Bienvenido a Vitae"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <Button
+        android:id="@+id/boton_crear_historia"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
+        android:text="Crear Historia"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.212"
+        android:backgroundTint="@color/purple_200"
+        />
+
+    <Button
+        android:id="@+id/editar_historia"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
+        android:text="Editar Historia"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/boton_crear_historia"
+        app:layout_constraintVertical_bias="0.059"
+        android:backgroundTint="@color/purple_200"
+        />
+
+    <Button
+        android:id="@+id/eliminar_historia"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
+        android:text="Eliminar Historia"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ver_historia"
+        app:layout_constraintVertical_bias="0.131"
+        android:backgroundTint="@color/purple_200"
+        />
+
+    <Button
+        android:id="@+id/ver_historia"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
+        android:text="Ver Historia"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editar_historia"
+        app:layout_constraintVertical_bias="0.085"
+        android:backgroundTint="@color/purple_200"
+        />
+
+    <Button
+        android:id="@+id/compartir_historia"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
+        android:text="Compartir Historia"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eliminar_historia"
+        app:layout_constraintVertical_bias="0.131"
+        android:backgroundTint="@color/purple_200"
+        />
+
+    <Button
+        android:id="@+id/acerca_vitae"
+        android:layout_width="160dp"
+        android:layout_height="70dp"
+        android:text="Acerca de Vitae"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cerrar_sesion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/compartir_historia"
+        android:backgroundTint="@color/purple_200"
+        />
+
+    <Button
+        android:id="@+id/cerrar_sesion"
+        android:layout_width="160dp"
+        android:layout_height="70dp"
+        android:text="Cerrar Sesión"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/compartir_historia"
+        app:layout_constraintStart_toEndOf="@id/acerca_vitae"
+        android:backgroundTint="@color/purple_200"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

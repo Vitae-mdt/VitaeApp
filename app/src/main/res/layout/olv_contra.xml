@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/olvide_contraseña"
+    android:layout_margin="20dp"
+    android:padding="10dp">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/caja_dialogo"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/borde">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/olvido_titulo"
+                android:padding="9dp"
+                android:text="Olvide mi contraseña"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:drawableLeft="@drawable/baseline_account_circle_24"
+                android:drawablePadding="9dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/purple_200"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mail_recuperacion"
+                android:text="Ingrese su dirección de correo electrónico"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                android:padding="9dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@+id/olvido_titulo"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"/>
+
+            <EditText
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/editablerecuperacion"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="20dp"
+                android:maxLines="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/olvido_titulo"/>
+            
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:id="@+id/boton_cancelar"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="12dp"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:text="Cancelar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editablerecuperacion"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintEnd_toStartOf="@id/boton_enviar"
+                android:backgroundTint="@color/purple_200"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:id="@+id/boton_enviar"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="45dp"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:text="Enviar"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintBottom_toBottomOf="@+id/caja_dialogo"
+                app:layout_constraintEnd_toEndOf= "parent"
+                app:layout_constraintStart_toEndOf="@id/boton_cancelar"
+                android:backgroundTint="@color/purple_200"/>
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

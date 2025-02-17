@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-feature android:name="android.hardware.nfc" android:required="true" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:targetApi="31">
+        <activity
+            android:name=".CompartirBT"
+            android:exported="false" />
+        <activity
+            android:name=".AyudaBT"
+            android:exported="false" />
+        <activity
+            android:name=".DashboardBluetooth"
+            android:exported="false" />
+        <activity
+            android:name=".AyudaNFC"
+            android:exported="false" />
+        <activity
+            android:name=".DashboardNFC"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".CompartirDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".EliminarHistoria2"
+            android:exported="false" />
+        <activity
+            android:name=".ui.theme.EliminarHistoria"
+            android:exported="false" />
+        <activity
+            android:name=".AcercadeVitae"
+            android:exported="false" />
+        <activity
+            android:name=".EditarHistoriaDatosMedicos"
+            android:exported="false" />
+        <activity
+            android:name=".EditarHistoriaDatosPersonales"
+            android:exported="false" />
+        <activity
+            android:name=".EditarDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".verHistoria"
+            android:exported="false" />
+        <activity
+            android:name=".CrearHistorias2"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".CrearHistorias"
+            android:exported="false" />
+        <activity
+            android:name=".Dahsboard"
+            android:exported="true" />
+        <activity
+            android:name=".Reg"
+            android:exported="true" />
+        <activity
+            android:name=".Log"
+            android:exported="true"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditarHistoriaDatosMedicos">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/actualizar_datos_medicos"
+            android:hint="Ingrese sus datos personales"
+            android:textAlignment="center"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/actualizar_alergia"
+            android:hint="¿Posee usted alergias?"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/boton_actualizar_alergias"
+            android:orientation="horizontal"
+            android:layout_marginTop="9dp"
+            android:backgroundTint="@color/purple_200"
+            >
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/actualizar_si_alergia"
+                android:text="Si"
+                android:padding="9dp"
+                android:backgroundTint="@color/purple_200"
+                />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/actualizar_no_alergia"
+                android:text="No"
+                android:padding="9dp"
+                android:backgroundTint="@color/purple_200"
+                />
+
+        </RadioGroup>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/actualizar_especifica_alergias"
+            android:hint="Si es afirmativo, especifique."
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"
+            android:visibility="gone"  />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/actualizar_claustrofobia"
+            android:hint="¿Sufre de claustrofobia?"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/boton_actualizar_claustrofobia"
+            android:orientation="horizontal"
+            android:layout_marginTop="9dp"
+            android:backgroundTint="@color/purple_200"
+
+            >
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/actualizar_si_claustrofobia"
+                android:text="Si"
+                android:padding="9dp"
+                android:backgroundTint="@color/purple_200"
+                />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/actualizar_no_claustrofobia"
+                android:text="No"
+                android:padding="9dp"
+                android:backgroundTint="@color/purple_200"
+                />
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/texto_actualizar_observaciones_adicionales"
+            android:hint="Oberservaciones adicionales"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="9dp"
+            android:layout_marginTop="9dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/purple_200"
+            android:hint="Oberservaciones adicionales"
+            android:id="@+id/actualizar_observaciones_adicionales"
+            />
+
+
+        <Button
+            android:id="@+id/boton_actualizar_datos_medicos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:backgroundTint="@color/purple_200"
+            android:padding="9dp"
+            android:text="Actualizar Datos"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:backgroundTint="@color/purple_200"
+            android:padding="9dp"
+            android:text="Cancelar"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:id="@+id/boton_cancelar"
+            />
+
+
+
+    </LinearLayout>
+
+</ScrollView>

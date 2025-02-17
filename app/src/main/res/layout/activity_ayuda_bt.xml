@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AyudaBT">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/texto_acerca_de_bt"
+            android:background="@color/purple_200"
+            android:padding="9dp"
+            android:text="Acerca de Bluetooth"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/texto_acerca_de_bt2"
+            android:background="@color/purple_200"
+            android:padding="9dp"
+            android:text="Bluetooth es una tecnología inalámbrica que permite a tus dispositivos electrónicos comunicarse entre sí de forma sencilla y segura. Imagina que es un puente invisible que conecta tu teléfono, auriculares, altavoces y otros dispositivos. Esta tecnología funciona a corta distancia y utiliza ondas de radio para transmitir datos."
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/texto_acerca_de_bt3"
+            android:background="@color/purple_200"
+            android:padding="9dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="15dp"
+            android:text="El Boton de compartir por Bluetooth te permite compartir tu identificador unico en caso de que olvide su tarjeta personal, o no la tenga en su posesión al momento de realizar la consulta. Autorizando a otros dispositivos compatibles con Vitae, como los de tu médico o centro de salud, a acceder a tu información médica. De esta manera, los profesionales sanitarios podrán consultar tu historial clínico de forma rápida y segura, facilitando así la atención médica que necesite."
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/texto_acerca_de_bt4"
+            android:background="@color/purple_200"
+            android:padding="9dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="15dp"
+            android:text="El boton de volver al menú anterior te permite volver al menú de Compartir Datos."
+            />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/texto_acerca_de_bt5"
+            android:background="@color/purple_200"
+            android:padding="9dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="15dp"
+            android:text="El boton de volver al menú inicio te permite volver al menú de inicio."
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/purple_200"
+            android:padding="9dp"
+            android:text="Volver al menú anterior"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:id="@+id/boton_volver_bt"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/purple_200"
+            android:padding="9dp"
+            android:text="Volver al menú inicio"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:id="@+id/boton_volver_dashboard"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"/>
+
+
+    </LinearLayout>
+
+</ScrollView>
