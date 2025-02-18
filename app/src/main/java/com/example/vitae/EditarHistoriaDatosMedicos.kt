@@ -17,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class EditarHistoriaDatosMedicos : AppCompatActivity() {
 
+    //declaracion de variables que seran inicializadas luego
+
     private lateinit var actualizarDatosMedicos: TextView
     private lateinit var actualizarAlergia: TextView
     private lateinit var botonActualizarAlergias: RadioGroup
@@ -31,6 +33,7 @@ class EditarHistoriaDatosMedicos : AppCompatActivity() {
     private lateinit var botonActualizarDatosMedicos: Button
     private lateinit var botonCancelar: Button
 
+    //declaracion de variables de firebase
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
@@ -40,6 +43,7 @@ class EditarHistoriaDatosMedicos : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_editar_historia_datos_medicos)
 
+        //vinculacion de variables con los elementos de la vista
         actualizarDatosMedicos = findViewById(R.id.actualizar_datos_medicos)
         actualizarAlergia = findViewById(R.id.actualizar_alergia)
         botonActualizarAlergias = findViewById(R.id.boton_actualizar_alergias)
@@ -54,8 +58,12 @@ class EditarHistoriaDatosMedicos : AppCompatActivity() {
         botonActualizarDatosMedicos = findViewById(R.id.boton_actualizar_datos_medicos)
         botonCancelar = findViewById(R.id.boton_cancelar)
 
+        //llamada a la funcion buscarDatosMedicos para obtener los datos médicos del usuario
+
         buscarDatosMedicos()
 
+        //listeners de los botones para actualizar los datos médicos del usuario
+        //validador para el campo de alergias, si se selecciona "Si" se muestra el campo "EspecificaAlergias" y si se selecciona "No" se oculta
         botonActualizarAlergias.setOnCheckedChangeListener { _, checkedId ->
             actualizarEspecificaAlergias.visibility = if (checkedId == R.id.actualizar_si_alergia) {
                 View.VISIBLE
@@ -71,6 +79,9 @@ class EditarHistoriaDatosMedicos : AppCompatActivity() {
         }
     }
 
+    //funcion para buscar los datos médicos del usuario en la base de datos
+    //si el usuario no esta autenticado se muestra un mensaje de error
+    //si el usuario esta autenticado se obtienen los datos médicos del usuario de la base de datos mediante el id del usuario y la funcion get
     private fun buscarDatosMedicos() {
         val user = auth.currentUser?.uid
         if (user != null) {
@@ -103,10 +114,15 @@ class EditarHistoriaDatosMedicos : AppCompatActivity() {
         }
     }
 
+    //funcion para actualizar los datos médicos del usuario en la base de datos
+    //si el usuario no esta autenticado se muestra un mensaje de error
+    //si el usuario esta autenticado se actualiza los datos médicos del usuario en la base de datos mediante el id del usuario y la funcion update
+    //a diferencia de la actualizacion de datos personales donde se usa set, en este caso se usa update para actualizar varios campos a la vez
     private fun actualizarDatosMedicos(){
         val user = auth.currentUser?.uid
         if (user != null) {
             val actualizarData = hashMapOf<String, Any>(
+                //se chequea si el usuario selecciono "Si" o "No" para el campo de alergias y claustrofobia mediante el uso de un RadioButton
                 "Alergia" to if (actualizarSiAlergia.isChecked) "Si" else "No",
                 "Claustrofobia" to if (actualizarSiClaustrofobia.isChecked) "Si" else "No",
                 "Observaciones" to actualizarObservacionesAdicionales.text.toString(),

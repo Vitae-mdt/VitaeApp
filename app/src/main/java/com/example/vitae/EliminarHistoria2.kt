@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class EliminarHistoria2 : AppCompatActivity() {
 
+    //declaracion de variables que seran inicializadas luego
     private lateinit var botonEliminar: Button
     private lateinit var listaEliminar: ListView
     private lateinit var botonVolver: Button
@@ -30,15 +31,22 @@ class EliminarHistoria2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_eliminar_historia2)
 
+        //vinculacion de variables con los elementos de la vista
+
         botonEliminar = findViewById(R.id.boton_eliminar)
         listaEliminar = findViewById(R.id.listaEliminar)
         botonVolver = findViewById(R.id.boton_volver)
 
+        //inicializacion de variables para el adaptador de la lista
         historiaList = mutableListOf()
         adaptador = ArrayAdapter(this, android.R.layout.simple_list_item_1, historiaList)
         listaEliminar.adapter = adaptador
 
+        //llamada a la funcion buscarDatos para obtener los datos de la base de datos
+
         buscarDatos()
+
+        //listeners de los botones para eliminar la historia seleccionada y volver a la vista anterior
 
         listaEliminar.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             usuarioSeleccionado = historiaList[position]
@@ -47,6 +55,11 @@ class EliminarHistoria2 : AppCompatActivity() {
             finish()
         }
 
+
+        //listeners de los botones para eliminar la historia seleccionada y volver a la vista anterior
+        //se verifica que el usuario seleccionado no sea nulo
+        //se llama a la funcion esAdmin para verificar que el usuario actual tenga permisos de administrador
+        //si el usuario es administrador se llama a la funcion eliminarHistoria para eliminar la historia seleccionada de la base de datos
         botonEliminar.setOnClickListener {
             usuarioSeleccionado?.let { userID ->
                 esAdmin { isAdmin ->
@@ -63,7 +76,9 @@ class EliminarHistoria2 : AppCompatActivity() {
         }
     }
 
-
+    //funcion para buscar los datos de la base de datos
+    //se verifica que el usuario actual tenga permisos de administrador
+    //se obtienen los datos de la base de datos mediante el id del usuario y la funcion get
     private fun buscarDatos() {
         esAdmin { isAdmin ->
             if (isAdmin) {
@@ -97,7 +112,7 @@ class EliminarHistoria2 : AppCompatActivity() {
                                         }
                                         .addOnFailureListener { exception ->
                                             usuariosProcesados++
-                                            // Manejar error al obtener "informacionUsuarios" (puedes dejarlo en blanco si no quieres mostrar el error)
+                                            // Manejar error al obtener "informacionUsuarios"
                                             if (usuariosProcesados == documents.size()) {
                                                 adaptador = ArrayAdapter(this, android.R.layout.simple_list_item_1, nombreList)
                                                 listaEliminar.adapter = adaptador
@@ -107,7 +122,7 @@ class EliminarHistoria2 : AppCompatActivity() {
                                 }
                                 .addOnFailureListener { exception ->
                                     usuariosProcesados++
-                                    // Manejar error al obtener "datosMedicos" (puedes dejarlo en blanco si no quieres mostrar el error)
+                                    // Manejar error al obtener "datosMedicos"
                                     if (usuariosProcesados == documents.size()) {
                                         adaptador = ArrayAdapter(this, android.R.layout.simple_list_item_1, nombreList)
                                         listaEliminar.adapter = adaptador
@@ -127,7 +142,10 @@ class EliminarHistoria2 : AppCompatActivity() {
 
 
 
-
+    //funcion para eliminar la historia seleccionada de la base de datos
+    //se verifica que el usuario actual tenga permisos de administrador
+    //se crea la varable elimina con la funcion batch, la  cual permite realizar varias operaciones en una sola transaccion con la base de datos
+    //se eliminan los datos de la base de datos mediante el id del usuario y la funcion delete
     private fun eliminarHistoria(userID: String) {
         val elimina = db.batch()
         val datosMedicosEliminar = db.collection("datosMedicos").document(userID)
@@ -144,6 +162,9 @@ class EliminarHistoria2 : AppCompatActivity() {
         }
     }
 
+    //funcion para verificar que el usuario actual tenga permisos de administrador
+    //se verifica que el usuario actual tenga permisos de administrador
+    //se obtienen los datos de la base de datos mediante el id del usuario y la funcion get
     private fun esAdmin(callback: (Boolean) -> Unit) {
         val user = auth.currentUser
         if (user != null) {

@@ -11,6 +11,7 @@ import com.example.vitae.databinding.ActivityEditarDashboardBinding
 
 class EditarDashboard : AppCompatActivity() {
 
+    //declaracion de variables para los botones y el texto de ayuda que seran inicializados mas tarde
 
     private lateinit var binding : ActivityEditarDashboardBinding
     private lateinit var botonEditarDatosPersonales : Button
@@ -22,9 +23,15 @@ class EditarDashboard : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_editar_dashboard)
 
+        //vincula el diseño de la actividad con el código
+
         botonEditarDatosPersonales = findViewById(R.id.boton_editar_datos_personales)
         botonEditarDatosMedicos = findViewById(R.id.boton_editar_datos_medicos)
         botonVolverDashboard = findViewById(R.id.boton_volver_dashboard)
+
+        //instruccion de escucha para el boton de editar datos personales
+        //instruccion de escucha para el boton de editar datos medicos
+        //instruccion de escucha para el boton de volver al dashboard
 
         binding = ActivityEditarDashboardBinding.inflate(layoutInflater)
         botonEditarDatosMedicos.setOnClickListener {
@@ -37,6 +44,9 @@ class EditarDashboard : AppCompatActivity() {
             volverDashboard()
         }
     }
+
+    //funciones que llevan a las actividades correspondientes
+    //al presionar los botones
 
     private fun editarDatosPerosnales (){
         val intent = Intent(this, EditarHistoriaDatosPersonales::class.java)

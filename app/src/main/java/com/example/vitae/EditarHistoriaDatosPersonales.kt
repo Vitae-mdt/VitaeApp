@@ -13,6 +13,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class EditarHistoriaDatosPersonales : AppCompatActivity() {
 
+    //declaracion de variables que eran inicializadas luego
+
     private lateinit var binding: EditarHistoriaDatosPersonales
     private lateinit var editarNombreCompleto: EditText
     private lateinit var editarFechaNacimiento: EditText
@@ -27,6 +29,7 @@ class EditarHistoriaDatosPersonales : AppCompatActivity() {
     private lateinit var botonDatosPersonalesReingreso: Button
     private lateinit var botonCancelar: Button
 
+    //declaracion de variables de firebase
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
@@ -36,6 +39,8 @@ class EditarHistoriaDatosPersonales : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_editar_historia_datos_personales)
+
+        //vinculacion de variables con los elementos de la vista
 
         editarNombreCompleto = findViewById(R.id.reingrese_nombre_completo)
         editarFechaNacimiento = findViewById(R.id.reingrese_fecha_nacimiento)
@@ -50,7 +55,11 @@ class EditarHistoriaDatosPersonales : AppCompatActivity() {
         botonDatosPersonalesReingreso = findViewById(R.id.boton_datos_personales_reingreso)
         botonCancelar = findViewById(R.id.boton_cancelar)
 
+        //llamada a la funcion buscarDatos para obtener los datos del usuario
+
         buscarDatos()
+
+        //listeners de los botones para actualizar los datos del usuario
 
         botonDatosPersonalesReingreso.setOnClickListener {
             actualizarDatos()
@@ -62,6 +71,10 @@ class EditarHistoriaDatosPersonales : AppCompatActivity() {
         }
 
     }
+
+    //funcion para buscar los datos del usuario en la base de datos
+    //si el usuario no esta autenticado se muestra un mensaje de error
+    //si el usuario esta autenticado se obtienen los datos del usuario de la base de datos mediante el id del usuario y la funcion get
     private fun buscarDatos(){
         val user = auth.currentUser?.uid
         if (user != null){
@@ -71,6 +84,7 @@ class EditarHistoriaDatosPersonales : AppCompatActivity() {
                         editarNombreCompleto.setText(document.getString("NombreCompleto"))
                         editarFechaNacimiento.setText(document.getString("FechaNacimiento"))
                         editarLugarNacimiento.setText(document.getString("LugarNacimiento"))
+                        //se intercambian los valores de int en la base de datos a long y luego a string para que se muestren en la vista
                         editarAltura.setText(document.getLong("Altura")?.toString())
                         editarPeso.setText(document.getLong("Peso")?.toString())
                         editarEdad.setText(document.getLong("Edad")?.toString())
@@ -92,6 +106,10 @@ class EditarHistoriaDatosPersonales : AppCompatActivity() {
         }
     }
 
+    //funcion para actualizar los datos del usuario en la base de datos
+    //si el usuario no esta autenticado se muestra un mensaje de error
+    //si el usuario esta autenticado se actualiza los datos del usuario en la base de datos mediante el id del usuario y la funcion set
+
     private fun actualizarDatos(){
         val user = auth.currentUser?.uid
         if (user != null){
@@ -99,6 +117,7 @@ class EditarHistoriaDatosPersonales : AppCompatActivity() {
                 "NombreCompleto" to editarNombreCompleto.text.toString(),
                 "FechaNacimiento" to editarFechaNacimiento.text.toString(),
                 "LugarNacimiento" to editarLugarNacimiento.text.toString(),
+                //se intercambian los valores de string a int para que se guarden en la base de datos, revirtiendo el proceso en la funcion anterior
                 "Altura" to editarAltura.text.toString().toIntOrNull(),
                 "Peso" to editarPeso.text.toString().toIntOrNull(),
                 "Edad" to editarEdad.text.toString().toIntOrNull(),
