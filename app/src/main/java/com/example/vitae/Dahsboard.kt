@@ -27,13 +27,18 @@ class Dahsboard : AppCompatActivity() {
 
 
         //establece la vista de la actividad con el diseño vinculado y escucha el evento de clic en el botón de cerrar sesión
-        //y ejecuta la acción que lleva a la actividad de inicio de sesión
+        //ejecuta la acción que lleva a la actividad de inicio de sesión y cierra la actividad actual
+        //elimina la caché de la aplicación y prohibe al usuario volver atrás mediante la bandera FLAG_ACTIVITY_CLEAR_TASK la cual elimina todas las actividades de la pila
+        //la actividad actual se convierte en la nueva actividad principal
         setContentView(binding.root)
         binding.cerrarSesion.setOnClickListener {
             eliminarCache()
             FirebaseAuth.getInstance().signOut()
-            val intent = Intent(this, Log::class.java)
+            val intent = Intent(this, Log::class.java) .apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
             startActivity(intent)
+            finish()
             Toast.makeText(this, "Sesión cerrada con exito", Toast.LENGTH_SHORT).show()
         }
 

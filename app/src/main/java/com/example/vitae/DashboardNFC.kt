@@ -15,11 +15,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.vitae.databinding.ActivityDashboardNfcBinding
 import com.google.firebase.auth.FirebaseAuth
 import android.provider.Settings
+import java.util.Base64
+import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
+import kotlin.experimental.and
 
 
 class DashboardNFC : AppCompatActivity() {
@@ -35,6 +38,8 @@ class DashboardNFC : AppCompatActivity() {
     private lateinit var IntentoNFC: Intent
     private lateinit var auth: FirebaseAuth
     private lateinit var pendingIntent: PendingIntent
+    private var AES_LLAVE = "4e7f1a8d2b9c6e3f0a5d8c7b2e9f1a4d".toByteArray() //lave de encriptacion de 32 bytes
+    private var AES_IV = "3c4d5e6f7a8b9c0d".toByteArray() //vector de inicializacion de 16 bytes
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,7 +166,9 @@ class DashboardNFC : AppCompatActivity() {
      try {
          ndef.connect()
          val uid = auth.currentUser?.uid ?: return
-         val ndefRecord = NdefRecord.createTextRecord(null, uid)
+         val encriptado = encriptadoAES(uid.toByteArray())
+         val codificacionUID = Base64.getEncoder().encodeToString(encriptado)
+         val ndefRecord = NdefRecord.createTextRecord(null, codificacionUID)
          val ndefMessage = NdefMessage(ndefRecord)
          ndef.writeNdefMessage(ndefMessage)
          Toast.makeText(this, "Datos escritos correctamente", Toast.LENGTH_SHORT).show()
@@ -175,8 +182,12 @@ class DashboardNFC : AppCompatActivity() {
 
 
     // Crea la conexión con la etiqueta NFC y lee los datos Ndef del mensaje.
+    //Esta funcion se encarga de decodificar y leer los datos del usuario, saltando el codigo de lenguaje y definiendo el tipo de codificacion
+    //El manejo de salto de codigo de lenguaje se realiza con la variable languageCodeLength
+    //El manejo de la codificacion se realiza con la variable textEncoding
     // Si se pudo leer los datos correctamente, muestra un mensaje Toast con el ID del usuario.
     // Si hubo un error al leer los datos, muestra un mensaje Toast indicando que hubo un error.
+    // Si no se encontraron datos, muestra un mensaje Toast indicando que no se encontraron datos.
     // Finalmente, cierra la conexión con la etiqueta NFC.
     private fun leerDatosNfc(ndef: Ndef) {
         try {
@@ -184,8 +195,23 @@ class DashboardNFC : AppCompatActivity() {
             val ndefMessage = ndef.ndefMessage
             if (ndefMessage != null) {
                 val ndefRecord = ndefMessage.records[0]
-                val uidBytes = ndefRecord.payload
-                val uid = String(uidBytes, Charsets.UTF_8)
+                val codificacionUIDBytes = ndefRecord.payload
+                val codigoTexto = if ((codificacionUIDBytes[0] and 128.toByte()).toInt() == 0) "UTF-8" else "UTF-16"
+                val CodigoLenguaje = codificacionUIDBytes[0] and 127.toByte()
+                val codificacionUID = String(codificacionUIDBytes, CodigoLenguaje + 1, codificacionUIDBytes.size - CodigoLenguaje - 1, Charsets.UTF_8)
+                val encriptadoUID = try {
+                    Base64.getDecoder().decode(codificacionUID)
+                }catch (e: Exception) {
+                    Toast.makeText(this, "Datos invalidos Base64", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                val desencriptadoUID = try{
+                    desencriptadoAES(encriptadoUID)
+                }catch (e: Exception) {
+                    Toast.makeText(this, "Error al desencriptar los datos", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                val uid = String(desencriptadoUID, Charsets.UTF_8)
                 Toast.makeText(this, "ID de Usuario: $uid", Toast.LENGTH_SHORT).show()
             }
             else {
@@ -220,6 +246,27 @@ class DashboardNFC : AppCompatActivity() {
         }
         builder.setCancelable(false) // Evita que el usuario cierre el diálogo tocando fuera
         builder.show()
+    }
+
+
+    //se crea la funcion encriptadoAES que encripta los datos del usuario
+    //con el metodo AES, basado en la llave y el vector de inicializacion
+    private fun encriptadoAES (data: ByteArray): ByteArray {
+        val cifrado = Cipher.getInstance("AES/CBC/PKCS5Padding")
+        val llave = SecretKeySpec(AES_LLAVE, "AES")
+        val vector = IvParameterSpec(AES_IV)
+        cifrado.init(Cipher.ENCRYPT_MODE, llave, vector)
+        return cifrado.doFinal(data)
+    }
+
+    //se crea la funcion desencriptadoAES que desencripta los datos del usuario
+    //con el metodo AES, basado en la llave y el vector de inicializacion
+    private fun desencriptadoAES (data: ByteArray): ByteArray {
+        val cifrado = Cipher.getInstance("AES/CBC/PKCS5Padding")
+        val llave = SecretKeySpec(AES_LLAVE, "AES")
+        val vector = IvParameterSpec(AES_IV)
+        cifrado.init(Cipher.DECRYPT_MODE, llave, vector)
+        return cifrado.doFinal(data)
     }
 
 }
