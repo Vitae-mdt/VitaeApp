@@ -6,10 +6,12 @@ import android.content.Intent
 import android.nfc.NdefMessage
 import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
+import android.nfc.NfcEvent
 import android.nfc.Tag
 import android.nfc.tech.Ndef
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -17,7 +19,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.vitae.databinding.ActivityDashboardNfcBinding
 import com.google.firebase.auth.FirebaseAuth
-import android.provider.Settings
 import java.util.Base64
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
@@ -77,7 +78,6 @@ class DashboardNFC : AppCompatActivity() {
         } else {
             PendingIntent.FLAG_UPDATE_CURRENT
         }
-
         //se declara la variable pendingIntent que contiene el PendingIntent creado anteriormente
         pendingIntent = PendingIntent.getActivity(this, 0, intent, flags)
 
@@ -167,6 +167,10 @@ class DashboardNFC : AppCompatActivity() {
          ndef.connect()
          val uid = auth.currentUser?.uid ?: return
          val encriptado = encriptadoAES(uid.toByteArray())
+//         val longitud = encriptado.size
+//         Toast.makeText(this, "Longitud del UID: $longitud", Toast.LENGTH_SHORT).show()
+//         val datosEncriptados = encriptado.joinToString("") { "%02x".format(it) }
+//         Toast.makeText(this, "Datos encriptados: $datosEncriptados", Toast.LENGTH_SHORT).show()
          val codificacionUID = Base64.getEncoder().encodeToString(encriptado)
          val ndefRecord = NdefRecord.createTextRecord(null, codificacionUID)
          val ndefMessage = NdefMessage(ndefRecord)
@@ -268,6 +272,22 @@ class DashboardNFC : AppCompatActivity() {
         cifrado.init(Cipher.DECRYPT_MODE, llave, vector)
         return cifrado.doFinal(data)
     }
-
+//
+//    private fun comparentirNfc() {
+//        val uid = auth.currentUser?.uid ?: run {
+//            Toast.makeText(this, "No se pudo obtener el UID del usuario", Toast.LENGTH_SHORT).show()
+//            return
+//        }
+//        val encriptado = encriptadoAES(uid.toByteArray())
+//        val codificacionUID = Base64.getEncoder().encodeToString(encriptado)
+//        val ndefRecord = NdefRecord.createTextRecord(null, codificacionUID)
+//        val ndefMessage = NdefMessage(ndefRecord)
+//
+//        val adaptadorNFC = NfcAdapter.getDefaultAdapter(this)
+//        adaptadorNFC.setNdefPushMessageCallback(this, this)
+//        Toast.makeText(this, "Acerca el dispositivo al lector para compartir el ID", Toast.LENGTH_SHORT).show()
+//
+//
+//    }
 }
 

@@ -15,18 +15,25 @@ import com.example.vitae.databinding.ActivityCompartirBtBinding
 import com.google.firebase.auth.FirebaseAuth
 import java.io.OutputStream
 import java.util.UUID
+import android.app.AlertDialog
+import android.provider.Settings
+import java.util.Base64
+import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
 
 class CompartirBT : AppCompatActivity() {
 
-    private val REQUEST_ENABLE_BT = 1
-    private lateinit var EnviarDatos: Button
-    private var adaptadorBluetooth: BluetoothAdapter? = null
-    private var mmSocket: BluetoothSocket? = null
-    private var outputStream: OutputStream? = null
-    private lateinit var VolverDashboard: Button
-    private lateinit var VolverDashboardBt: Button
+    private lateinit var botonVolverCompartir: Button
+    private lateinit var  botonCompartir: Button
+    private lateinit var botonVolverDashboard : Button
+    private lateinit var auth : FirebaseAuth
+    private lateinit var adaptadorBt : BluetoothAdapter
+    private lateinit var socket : BluetoothSocket
+    private var AES_LLAVE = "4e7f1a8d2b9c6e3f0a5d8c7b2e9f1a4d".toByteArray() //llave de encriptado 32 bytes
+    private var AES_IV = "3c4d5e6f7a8b9c0d".toByteArray() // vector de inicializacion de 16 bytes
     private lateinit var binding: ActivityCompartirBtBinding
-
+    private lateinit var ayudaBluetooth: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,78 +42,90 @@ class CompartirBT : AppCompatActivity() {
         binding = ActivityCompartirBtBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        EnviarDatos = findViewById(R.id.boton_enviar_uid)
-        VolverDashboard = findViewById(R.id.boton_volver_dashboard)
-        VolverDashboardBt = findViewById(R.id.boton_volver_dashboard_bt)
+        botonVolverDashboard = findViewById(R.id.boton_volver_dashboard)
+        botonVolverCompartir = findViewById(R.id.boton_volver_dashboard_bt)
+        botonCompartir = findViewById(R.id.boton_enviar_uid)
 
-        VolverDashboard.setOnClickListener {
+        auth = FirebaseAuth.getInstance()
+        adaptadorBt = BluetoothAdapter.getDefaultAdapter()
+
+        if (adaptadorBt != null) {
+            mostrarDialogoBt()
+        }
+
+        botonCompartir.setOnClickListener {
+            enviarUID()
+        }
+
+        botonVolverDashboard.setOnClickListener {
             val intent = Intent(this, Dahsboard::class.java)
             startActivity(intent)
         }
-        VolverDashboardBt.setOnClickListener {
-            finish()
+        botonVolverCompartir.setOnClickListener {
+            val intent = Intent(this, DashboardBluetooth::class.java)
+            startActivity(intent)
         }
-
-        adaptadorBluetooth = BluetoothAdapter.getDefaultAdapter()
-        if (adaptadorBluetooth == null) {
-            Toast.makeText(this, "El dispositivo no soporta Bluetooth", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        EnviarDatos.setOnClickListener{
-            if (!adaptadorBluetooth!!.isEnabled){
-                val intentoBT = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                startActivityForResult(intentoBT, REQUEST_ENABLE_BT)
-            } else {
-                var direccionBt = "ESP32_Idaca"
-                var dispositivo = adaptadorBluetooth!!.getRemoteDevice(direccionBt)
-
-                try{
-                    val UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-                    val mmSocket = dispositivo.createInsecureRfcommSocketToServiceRecord(UUID)
-                    mmSocket.connect()
-                    val outputStream = mmSocket.outputStream
-
-                    var user = FirebaseAuth.getInstance().currentUser?.uid
-                    var userUid = user?.toString()?.toByteArray(Charsets.UTF_8) ?: byteArrayOf()
-                    outputStream.write(userUid)
-                    outputStream.flush()
-                    Toast.makeText(this, "Datos enviados", Toast.LENGTH_SHORT).show()
-
-                } catch (e: Exception){
-                    Toast.makeText(this, "Error al enviar los datos", Toast.LENGTH_SHORT).show()
-                }
-                finally {
-                    try {
-                        mmSocket?.close()
-                    }
-                    catch (e: Exception){
-                        Toast.makeText(this, "Error al cerrar el socket", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-            }
-        }
-
-
-
-
-
 
 
     }
 
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?,
-        caller: ComponentCaller
-    ) {
-        super.onActivityResult(requestCode, resultCode, data, caller)
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == RESULT_OK){
-            Toast.makeText(this, "Bluetooth habilitado", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Bluetooth no habilitado", Toast.LENGTH_SHORT).show()
+    private fun mostrarDialogoBt() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Bluetooth Desactivado")
+        builder.setMessage("Para usar esta función, por favor activa el Bluetooth en la configuración del teléfono.")
+        builder.setPositiveButton("Activar") { _, _ ->
+            // Open Bluetooth settings
+            val intent = Intent(Settings.ACTION_BLUETOOTH_SETTINGS)
+            startActivity(intent)
         }
+        builder.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.dismiss()
+            ayudaBluetooth.text = "Bluetooth está desactivado. Por favor, actívalo para usar esta función."
+        }
+        builder.setCancelable(false) // Prevent the user from dismissing the dialog by tapping outside
+        builder.show()
+    }
+
+    private fun enviarUID() {
+        val uid = auth.currentUser?.uid ?: return
+        val uidEncriptado = encriptadoAES(uid.toByteArray())
+        val codificacionUID = Base64.getEncoder().encodeToString(uidEncriptado)
+
+        val direccionESP = "ESP32"
+        val dispositivoESP = adaptadorBt.getRemoteDevice(direccionESP)
+
+        try {
+            val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+            socket = dispositivoESP.createRfcommSocketToServiceRecord(uuid)
+            socket.connect()
+
+            val output = socket.outputStream
+            output.write(codificacionUID.toByteArray())
+            output.flush()
+            Toast.makeText(this, "UID enviado", Toast.LENGTH_SHORT).show()
+
+        }catch (e: Exception) {
+            Toast.makeText(this, "Error al enviar el UID", Toast.LENGTH_SHORT).show()
+        }finally {
+            socket.close()
+        }
+
+    }
+    // AES encryption function
+    private fun encriptadoAES(data: ByteArray): ByteArray {
+        val cifrado = Cipher.getInstance("AES/CBC/PKCS5Padding")
+        val llave = SecretKeySpec(AES_LLAVE, "AES")
+        val vector = IvParameterSpec(AES_IV)
+        cifrado.init(Cipher.ENCRYPT_MODE, llave, vector)
+        return cifrado.doFinal(data)
+    }
+
+    // AES decryption function
+    private fun desencriptadoAES(data: ByteArray): ByteArray {
+        val cifrado = Cipher.getInstance("AES/CBC/PKCS5Padding")
+        val llave = SecretKeySpec(AES_LLAVE, "AES")
+        val vector = IvParameterSpec(AES_IV)
+        cifrado.init(Cipher.DECRYPT_MODE, llave, vector)
+        return cifrado.doFinal(data)
     }
 }
