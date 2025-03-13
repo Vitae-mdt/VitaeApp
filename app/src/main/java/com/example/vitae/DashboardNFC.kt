@@ -39,9 +39,22 @@ class DashboardNFC : AppCompatActivity() {
     private lateinit var IntentoNFC: Intent
     private lateinit var auth: FirebaseAuth
     private lateinit var pendingIntent: PendingIntent
-    private var AES_LLAVE = "4e7f1a8d2b9c6e3f0a5d8c7b2e9f1a4d".toByteArray() //lave de encriptacion de 32 bytes
-    private var AES_IV = "3c4d5e6f7a8b9c0d".toByteArray() //vector de inicializacion de 16 bytes
+//    private var AES_LLAVE = "4e7f1a8d2b9c6e3f0a5d8c7b2e9f1a4d".toByteArray() //lave de encriptacion de 32 bytes
+//    private var AES_IV = "3c4d5e6f7a8b9c0d3c4d5e6f7a8b9c0".toByteArray() //vector de inicializacion de 16 bytes
+    private var AES_LLAVE = byteArrayOf(
+         0x4e.toByte(), 0x7f.toByte(), 0x1a.toByte(), 0x8d.toByte(),
+         0x2b.toByte(), 0x9c.toByte(), 0x6e.toByte(), 0x3f.toByte(),
+          0x0a.toByte(), 0x5d.toByte(), 0x8c.toByte(), 0x7b.toByte(),
+          0x2e.toByte(), 0x9f.toByte(), 0x1a.toByte(), 0x4d.toByte()
+    )
 
+    // Vector de Inicialización (IV) de 16 bytes
+    private var AES_IV = byteArrayOf(
+        0x3c.toByte(), 0x4d.toByte(), 0x5e.toByte(), 0x6f.toByte(),
+        0x7a.toByte(), 0x8b.toByte(), 0x9c.toByte(), 0x0d.toByte(),
+        0x3c.toByte(), 0x4d.toByte(), 0x5e.toByte(), 0x6f.toByte(),
+        0x7a.toByte(), 0x8b.toByte(), 0x9c.toByte(), 0x0d.toByte()
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
