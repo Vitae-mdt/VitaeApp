@@ -40,29 +40,34 @@ import javax.crypto.spec.SecretKeySpec
 
 class CompartirBT : AppCompatActivity() {
 
+    //declaracion de variables que seran inicalizadas mas tarde
+    //UUIDs de los servicios y características BLE
+    //Codigo de solicitud de permisos para identificarlo al solicitarlos
     private lateinit var botonVolverCompartir: Button
     private lateinit var botonCompartir: Button
     private lateinit var botonVolverDashboard: Button
     private lateinit var auth: FirebaseAuth
     private lateinit var adaptadorBt: BluetoothAdapter
     private var bluetoothGatt: BluetoothGatt? = null
-    private val serviceUUID =
-        "12345678-1234-5678-1234-567812345678" // Replace with your ESP32 service UUID
-    private val characteristicUUID =
-        "87654321-4321-8765-4321-876543218765" // Replace with your ESP32 characteristic UUID
-
-    //    private var AES_LLAVE = "4e7f1a8d2b9c6e3f0a5d8c7b2e9f1a4d".toByteArray() //llave de encriptado 32 bytes
-//    private var AES_IV = "3c4d5e6f7a8b9c0d".toByteArray() // vector de inicializacion de 16 bytes
+    private val serviceUUID = "12345678-1234-5678-1234-567812345678"
+    private val characteristicUUID = "87654321-4321-8765-4321-876543218765"
+    //private var AES_LLAVE = "4e7f1a8d2b9c6e3f0a5d8c7b2e9f1a4d".toByteArray() //llave de encriptado 32 bytes
+    //private var AES_IV = "3c4d5e6f7a8b9c0d".toByteArray() // vector de inicializacion de 16 bytes
     private lateinit var binding: ActivityCompartirBtBinding
     private lateinit var ayudaBluetooth: Button
     companion object val PERMISSIONS_REQUEST_CODE = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //configuracion de la actividad y vinculacion del diseño con el codigo
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityCompartirBtBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        //inicializacion de los botones y obtencion de la instancia de FirebaseAuth
+        //obtencion del adaptador Bluetooth y verificacion de su estado
 
         botonVolverDashboard = findViewById(R.id.boton_volver_dashboard)
         botonVolverCompartir = findViewById(R.id.boton_volver_dashboard_bt)
@@ -78,8 +83,14 @@ class CompartirBT : AppCompatActivity() {
         }
         if (!adaptadorBt.isEnabled) {
             mostrarDialogoBt()
+            mostrarDialogoUbicacion()
         }
 
+        //escuchador de eventos para el boton de compartir
+        //fuerza la desconexion del dispositivo Bluetooth si esta conectado
+        //verifica si los permisos de ubicacion y conexion Bluetooth estan concedidos
+        //si no lo estan, solicita los permisos
+        //si los permisos estan concedidos, inicia el proceso de escaneo para encontrar el dispositivo Bluetooth
         botonCompartir.setOnClickListener {
 
             forzarDesconexion()
@@ -101,7 +112,7 @@ class CompartirBT : AppCompatActivity() {
             }
         }
 
-
+        //escuchador de eventos para los botones de volver y volver al dashboard
         botonVolverDashboard.setOnClickListener {
             val intent = Intent(this, Dahsboard::class.java)
             startActivity(intent)
@@ -112,6 +123,7 @@ class CompartirBT : AppCompatActivity() {
         }
     }
 
+    //funcion que solicita los permisos de ubicacion y conexion Bluetooth
     private fun permisos(){
         val permisosRequeridos = mutableListOf(
             android.Manifest.permission.BLUETOOTH,
@@ -120,21 +132,26 @@ class CompartirBT : AppCompatActivity() {
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.INTERNET
         )
+        //verifica si la version de androiod es mayor o igual a la version 12
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             permisosRequeridos.add(android.Manifest.permission.BLUETOOTH_CONNECT)
             permisosRequeridos.add(android.Manifest.permission.BLUETOOTH_SCAN)
         }
+        //filtra los permisos que no estan concedidos
         val permisosNegados = permisosRequeridos.filter {
             checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED
         }
+        //si hay permisos que no estan concedidos, solicita los permisos
         if (permisosNegados.isNotEmpty()) {
             requestPermissions(permisosNegados.toTypedArray(), 1)
         } else{
+            //si todos los permisos estan concedidos, inicia el proceso de escaneo
            empezarScaneo()
         }
 
     }
-
+    //Funcion que maneja el resultado de las solicitudes de permisos
+    // Se verifica si los permisos fueron otorgados para continuar con el flujo de la app
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -150,7 +167,11 @@ class CompartirBT : AppCompatActivity() {
             }
         }
     }
-
+    //funcion que inicia el proceso de escaneo para encontrar el dispositivo Bluetooth
+    //se configura el escaneo para que solo busque dispositivos BLE
+    //se verifica si el dispositivo tiene el permiso para conectarse a Bluetooth
+    //si lo tiene, se inicia el escaneo utilizando ScanCallback para manejar los resultados del escaneo y encontrar el dispositivo exacto
+    //luego detiene el escaneo y se conecta al dispositivo encontrado, iniciando la funcion conexionDispositivo
     private fun empezarScaneo() {
         val escaneo = adaptadorBt.bluetoothLeScanner
         if (ActivityCompat.checkSelfPermission(
@@ -158,13 +179,6 @@ class CompartirBT : AppCompatActivity() {
                 Manifest.permission.BLUETOOTH_SCAN
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
         escaneo.startScan(object : ScanCallback() {
@@ -172,7 +186,6 @@ class CompartirBT : AppCompatActivity() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 super.onScanResult(callbackType, result)
                 result?.device?.let { device ->
-                    Log.d("Bluetooth", "Dispositivo encontrado: ${device.name}")
                     if (device.name == "ESP32-BLE-Receiver") {
                         if (device.name == "ESP32-BLE-Receiver") {
                         escaneo.stopScan(this)
@@ -182,9 +195,11 @@ class CompartirBT : AppCompatActivity() {
                 }
                 }
             })
-        Toast.makeText(this, "Buscando ESP32...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Buscando y conectando a ESP32", Toast.LENGTH_SHORT).show()
     }
-
+    //funcion que se encarga de establecer la conexion con el dispositivo Bluetooth
+    //se verifica si el dispositivo tiene el permiso para conectarse a Bluetooth
+    //si lo tiene, se crea una instancia de BluetoothGatt para establecer la conexion
     private fun conexionDispositivo(device: android.bluetooth.BluetoothDevice) {
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -196,52 +211,54 @@ class CompartirBT : AppCompatActivity() {
         bluetoothGatt = device.connectGatt(this, false, gattCallback)
     }
 
+    //funcion que maneja los callbacks del dispositivo Bluetooth, definiendo los eventos de conexion y desconexion
+    //se verifica si la conexion fue exitosa y se inicia el descubrimiento de servicios
+    //si el dispositivo se desconecta, se cierra la conexion y se reinicia el proceso
     private val gattCallback = object : BluetoothGattCallback() {
         @SuppressLint("MissingPermission")
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
             super.onConnectionStateChange(gatt, status, newState)
             if (newState == BluetoothGatt.STATE_CONNECTED) {
-                Log.d("Bluetooth", "Conectado a ESP32")
                 gatt?.discoverServices()
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
-                Log.d("Bluetooth", "Desconectado de ESP32")
                 gatt?.close()
                 bluetoothGatt = null
             }
         }
-
+        //funcion que maneja los callbacks de descubrimiento de servicios
+        //se verifica si el descubrimiento fue exitoso y se obtiene el servicio y la caracteristica a utilizar
+        //si es exitoso, se envia el UID al dispositivo Bluetooth mediante enviarUID
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 val servicio = gatt?.getService(UUID.fromString(serviceUUID))
                 if (servicio == null) {
-                    Log.e("Bluetooth", "Service not found")
                     return
                 }
                 val caracteristica = servicio.getCharacteristic(UUID.fromString(characteristicUUID))
                 if (caracteristica == null) {
-                    Log.e("Bluetooth", "Characteristic not found")
                     return
                 }
                 enviarUID(gatt, caracteristica)
             } else {
-                Log.e("Bluetooth", "Service discovery failed")
             }
         }
 
+        //funcion que maneja los callbacks de escritura de datos
+        // Confirma si la operación fue exitosa o falló.
         override fun onCharacteristicWrite(
             gatt: BluetoothGatt?,
             characteristic: BluetoothGattCharacteristic?,
             status: Int
         ) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                Log.d("Bluetooth", "UID sent successfully")
             } else {
-                Log.e("Bluetooth", "Failed to send UID")
             }
         }
     }
-
+    // envía el UID del usuario autenticado a través de una característica Bluetooth específica
+    // verifica los permisos necesarios, convierte el UID en bytes y realiza la escritura en la característica
+    // luego, desconecta el dispositivo tras un breve retraso
     private fun enviarUID(gatt: BluetoothGatt, caracteristica: BluetoothGattCharacteristic) {
         val uid = auth.currentUser?.uid ?: return
         if (uid == null) {
@@ -254,13 +271,6 @@ class CompartirBT : AppCompatActivity() {
                 Manifest.permission.BLUETOOTH_CONNECT
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
         gatt.writeCharacteristic(caracteristica)
@@ -269,9 +279,9 @@ class CompartirBT : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             gatt.disconnect()
         } ,1000)
-//        gatt.disconnect()
-
     }
+    //cierra la conexion con el dispositivo Bluetooth
+    //verifica los permisos necesarios y cierra la conexion
 
     override fun onDestroy() {
         super.onDestroy()
@@ -280,37 +290,51 @@ class CompartirBT : AppCompatActivity() {
                 Manifest.permission.BLUETOOTH_CONNECT
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
         bluetoothGatt?.close()
     }
 
-
+    //funcion que muestra un dialogo de alerta para activar el Bluetooth
+    //se crea un dialogo de alerta con un titulo y un mensaje
+    //se agregan botones para activar el Bluetooth y cancelar la accion
+    //se muestra el dialogo y se finaliza la actividad
     private fun mostrarDialogoBt() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Bluetooth Desactivado")
         builder.setMessage("Para usar esta función, por favor activa el Bluetooth en la configuración del teléfono.")
         builder.setPositiveButton("Activar") { _, _ ->
-            // Open Bluetooth settings
             val intent = Intent(Settings.ACTION_BLUETOOTH_SETTINGS)
             startActivity(intent)
         }
         builder.setNegativeButton("Cancelar") { dialog, _ ->
             dialog.dismiss()
-            ayudaBluetooth.text =
-                "Bluetooth está desactivado. Por favor, actívalo para usar esta función."
         }
-        builder.setCancelable(false) // Prevent the user from dismissing the dialog by tapping outside
+        builder.setCancelable(false)
         builder.show()
     }
 
+    //funcion que muestra un dialogo de alerta para activar la ubicacion
+    //se crea un dialogo de alerta con un titulo y un mensaje
+    //se agregan botones para activar la ubicacion y cancelar la accion
+    //se muestra el dialogo y se finaliza la actividad
+    private fun mostrarDialogoUbicacion() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Ubicación Desactivada")
+        builder.setMessage("Para usar esta función, por favor activa la ubicación en la configuración del teléfono.")
+        builder.setPositiveButton("Activar") { _, _ ->
+            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            startActivity(intent)
+        }
+        builder.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.setCancelable(false)
+        builder.show()
+    }
+    //funcion que fuerza la desconexion del dispositivo Bluetooth
+    //verifica los permisos necesarios y cierra la conexion
+    //si el dispositivo no esta conectado, muestra un reinicio de conexion
     private fun forzarDesconexion(){
         if (bluetoothGatt != null) {
             if (ActivityCompat.checkSelfPermission(
@@ -324,7 +348,7 @@ class CompartirBT : AppCompatActivity() {
             bluetoothGatt?.close()
             bluetoothGatt = null
         }else {
-            Toast.makeText(this, "No hay conexión", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Reiniciando conexion al ESP32", Toast.LENGTH_SHORT).show()
         }
     }
     }
