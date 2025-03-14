@@ -39,8 +39,7 @@ class DashboardNFC : AppCompatActivity() {
     private lateinit var IntentoNFC: Intent
     private lateinit var auth: FirebaseAuth
     private lateinit var pendingIntent: PendingIntent
-//    private var AES_LLAVE = "4e7f1a8d2b9c6e3f0a5d8c7b2e9f1a4d".toByteArray() //lave de encriptacion de 32 bytes
-//    private var AES_IV = "3c4d5e6f7a8b9c0d3c4d5e6f7a8b9c0".toByteArray() //vector de inicializacion de 16 bytes
+    //llave de encriptado 32 bytes
     private var AES_LLAVE = byteArrayOf(
          0x4e.toByte(), 0x7f.toByte(), 0x1a.toByte(), 0x8d.toByte(),
          0x2b.toByte(), 0x9c.toByte(), 0x6e.toByte(), 0x3f.toByte(),

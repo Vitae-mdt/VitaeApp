@@ -51,10 +51,25 @@ class CompartirBT : AppCompatActivity() {
     private var bluetoothGatt: BluetoothGatt? = null
     private val serviceUUID = "12345678-1234-5678-1234-567812345678"
     private val characteristicUUID = "87654321-4321-8765-4321-876543218765"
-    //private var AES_LLAVE = "4e7f1a8d2b9c6e3f0a5d8c7b2e9f1a4d".toByteArray() //llave de encriptado 32 bytes
-    //private var AES_IV = "3c4d5e6f7a8b9c0d".toByteArray() // vector de inicializacion de 16 bytes
+
+    //llave de encriptado 32 bytes
+    private var AES_LLAVE = byteArrayOf(
+        0x4e.toByte(), 0x7f.toByte(), 0x1a.toByte(), 0x8d.toByte(),
+        0x2b.toByte(), 0x9c.toByte(), 0x6e.toByte(), 0x3f.toByte(),
+        0x0a.toByte(), 0x5d.toByte(), 0x8c.toByte(), 0x7b.toByte(),
+        0x2e.toByte(), 0x9f.toByte(), 0x1a.toByte(), 0x4d.toByte()
+    )
+
+    // Vector de Inicialización (IV) de 16 bytes
+    private var AES_IV = byteArrayOf(
+        0x3c.toByte(), 0x4d.toByte(), 0x5e.toByte(), 0x6f.toByte(),
+        0x7a.toByte(), 0x8b.toByte(), 0x9c.toByte(), 0x0d.toByte(),
+        0x3c.toByte(), 0x4d.toByte(), 0x5e.toByte(), 0x6f.toByte(),
+        0x7a.toByte(), 0x8b.toByte(), 0x9c.toByte(), 0x0d.toByte()
+    )
     private lateinit var binding: ActivityCompartirBtBinding
     private lateinit var ayudaBluetooth: Button
+
     companion object val PERMISSIONS_REQUEST_CODE = 1
 
 
@@ -124,7 +139,7 @@ class CompartirBT : AppCompatActivity() {
     }
 
     //funcion que solicita los permisos de ubicacion y conexion Bluetooth
-    private fun permisos(){
+    private fun permisos() {
         val permisosRequeridos = mutableListOf(
             android.Manifest.permission.BLUETOOTH,
             android.Manifest.permission.BLUETOOTH_ADMIN,
@@ -144,12 +159,13 @@ class CompartirBT : AppCompatActivity() {
         //si hay permisos que no estan concedidos, solicita los permisos
         if (permisosNegados.isNotEmpty()) {
             requestPermissions(permisosNegados.toTypedArray(), 1)
-        } else{
+        } else {
             //si todos los permisos estan concedidos, inicia el proceso de escaneo
-           empezarScaneo()
+            empezarScaneo()
         }
 
     }
+
     //Funcion que maneja el resultado de las solicitudes de permisos
     // Se verifica si los permisos fueron otorgados para continuar con el flujo de la app
     override fun onRequestPermissionsResult(
@@ -167,6 +183,7 @@ class CompartirBT : AppCompatActivity() {
             }
         }
     }
+
     //funcion que inicia el proceso de escaneo para encontrar el dispositivo Bluetooth
     //se configura el escaneo para que solo busque dispositivos BLE
     //se verifica si el dispositivo tiene el permiso para conectarse a Bluetooth
@@ -188,15 +205,16 @@ class CompartirBT : AppCompatActivity() {
                 result?.device?.let { device ->
                     if (device.name == "ESP32-BLE-Receiver") {
                         if (device.name == "ESP32-BLE-Receiver") {
-                        escaneo.stopScan(this)
-                        conexionDispositivo(device)
+                            escaneo.stopScan(this)
+                            conexionDispositivo(device)
                         }
                     }
                 }
-                }
-            })
+            }
+        })
         Toast.makeText(this, "Buscando y conectando a ESP32", Toast.LENGTH_SHORT).show()
     }
+
     //funcion que se encarga de establecer la conexion con el dispositivo Bluetooth
     //se verifica si el dispositivo tiene el permiso para conectarse a Bluetooth
     //si lo tiene, se crea una instancia de BluetoothGatt para establecer la conexion
@@ -225,6 +243,7 @@ class CompartirBT : AppCompatActivity() {
                 bluetoothGatt = null
             }
         }
+
         //funcion que maneja los callbacks de descubrimiento de servicios
         //se verifica si el descubrimiento fue exitoso y se obtiene el servicio y la caracteristica a utilizar
         //si es exitoso, se envia el UID al dispositivo Bluetooth mediante enviarUID
@@ -256,6 +275,7 @@ class CompartirBT : AppCompatActivity() {
             }
         }
     }
+
     // envía el UID del usuario autenticado a través de una característica Bluetooth específica
     // verifica los permisos necesarios, convierte el UID en bytes y realiza la escritura en la característica
     // luego, desconecta el dispositivo tras un breve retraso
@@ -265,7 +285,19 @@ class CompartirBT : AppCompatActivity() {
             Toast.makeText(this, "UID no encontrado", Toast.LENGTH_SHORT).show()
             return
         }
-        caracteristica.value = uid.toByteArray(Charsets.UTF_8)
+        val encriptadoUID = try {
+            encriptadoAES(uid.toByteArray(Charsets.UTF_8))
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error al encriptar los datos", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val base64UID = try {
+            Base64.getEncoder().encodeToString(encriptadoUID)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error al codificar los datos en Base64", Toast.LENGTH_SHORT).show()
+            return
+        }
+        caracteristica.value = base64UID.toByteArray(Charsets.UTF_8)
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.BLUETOOTH_CONNECT
@@ -274,12 +306,14 @@ class CompartirBT : AppCompatActivity() {
             return
         }
         gatt.writeCharacteristic(caracteristica)
-        Toast.makeText(this, "UID enviado", Toast.LENGTH_SHORT).show()
-        Toast.makeText(this, "Id enviado: $uid", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "UID cifrado y codificado enviado", Toast.LENGTH_SHORT).show()
+        // Mostrar el UID codificado en Base64 para fines de depuración.
+        Toast.makeText(this, "UID codificado en Base64: $base64UID", Toast.LENGTH_SHORT).show()
         Handler(Looper.getMainLooper()).postDelayed({
             gatt.disconnect()
-        } ,1000)
+        }, 1000)
     }
+
     //cierra la conexion con el dispositivo Bluetooth
     //verifica los permisos necesarios y cierra la conexion
 
@@ -332,45 +366,44 @@ class CompartirBT : AppCompatActivity() {
         builder.setCancelable(false)
         builder.show()
     }
+
     //funcion que fuerza la desconexion del dispositivo Bluetooth
     //verifica los permisos necesarios y cierra la conexion
     //si el dispositivo no esta conectado, muestra un reinicio de conexion
-    private fun forzarDesconexion(){
+    private fun forzarDesconexion() {
         if (bluetoothGatt != null) {
             if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_CONNECT
-            ) != PackageManager.PERMISSION_GRANTED
+                    this,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                ) != PackageManager.PERMISSION_GRANTED
             ) {
                 return
             }
             bluetoothGatt?.disconnect()
             bluetoothGatt?.close()
             bluetoothGatt = null
-        }else {
+        } else {
             Toast.makeText(this, "Reiniciando conexion al ESP32", Toast.LENGTH_SHORT).show()
         }
     }
+
+
+    // Función de cifrado AES que utiliza una llave (AES_LLAVE) y un vector de inicialización (AES_IV).
+    private fun encriptadoAES(data: ByteArray): ByteArray {
+        val cifrado = Cipher.getInstance("AES/CBC/PKCS5Padding")
+        val llave = SecretKeySpec(AES_LLAVE, "AES")
+        val vector = IvParameterSpec(AES_IV)
+        cifrado.init(Cipher.ENCRYPT_MODE, llave, vector)
+        return cifrado.doFinal(data)
     }
 
-//    // AES encriptado
-//    private fun encriptadoAES(data: ByteArray): ByteArray {
-//        val cifrado = Cipher.getInstance("AES/CBC/PKCS5Padding")
-//        val llave = SecretKeySpec(AES_LLAVE, "AES")
-//        val vector = IvParameterSpec(AES_IV)
-//        cifrado.init(Cipher.ENCRYPT_MODE, llave, vector)
-//        return cifrado.doFinal(data)
-//    }
-
-
-
-//    AES desencriptado
-//    private fun desencriptadoAES(data: ByteArray): ByteArray {
-//        val cifrado = Cipher.getInstance("AES/CBC/PKCS5Padding")
-//        val llave = SecretKeySpec(AES_LLAVE, "AES")
-//        val vector = IvParameterSpec(AES_IV)
-//        cifrado.init(Cipher.DECRYPT_MODE, llave, vector)
-//        return cifrado.doFinal(data)
-//    }
-
-
+    // Función de descifrado AES para procesar datos recibidos en el lado del dispositivo receptor.
+    private fun desencriptadoAES(data: String): ByteArray {
+        val cifrado = Cipher.getInstance("AES/CBC/PKCS5Padding")
+        val llave = SecretKeySpec(AES_LLAVE, "AES")
+        val vector = IvParameterSpec(AES_IV)
+        val encriptadoBytes = Base64.getDecoder().decode(data)
+        cifrado.init(Cipher.DECRYPT_MODE, llave, vector)
+        return cifrado.doFinal(encriptadoBytes)
+    }
+}
