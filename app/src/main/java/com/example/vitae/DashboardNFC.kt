@@ -241,6 +241,7 @@ class DashboardNFC : AppCompatActivity() {
         }
     }
 
+
     // Muestra un diálogo de alerta para activar el NFC.
     // El diálogo contiene un botón para activar el NFC y otro para cancelar.
     // Si el usuario hace clic en el botón de activar, se abre la configuración de NFC del sistema.

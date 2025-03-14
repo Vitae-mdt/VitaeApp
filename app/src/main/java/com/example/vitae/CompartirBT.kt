@@ -407,3 +407,4 @@ class CompartirBT : AppCompatActivity() {
         return cifrado.doFinal(encriptadoBytes)
     }
 }
+
