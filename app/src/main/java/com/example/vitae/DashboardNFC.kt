@@ -65,7 +65,7 @@ class DashboardNFC : AppCompatActivity() {
         ayudaNfc = findViewById(R.id.ayuda_nfc)
         botonEscribirNfc = findViewById(R.id.boton_escribir_NFC)
         botonLeerDatosNfc = findViewById(R.id.boton_leer_datos_NFC)
-        botonCompartirNfc = findViewById(R.id.boton_compartir_nfc)
+//        botonCompartirNfc = findViewById(R.id.boton_compartir_nfc)
 
         //inicializa las variables auth y AdaptadorNFC que se conecta a la base de datos de firebase
         auth = FirebaseAuth.getInstance()

@@ -3,12 +3,14 @@ package com.example.vitae
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.vitae.databinding.ActivityCompartirDashboardBinding
-
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class CompartirDashboard : AppCompatActivity() {
@@ -18,6 +20,8 @@ class CompartirDashboard : AppCompatActivity() {
     private lateinit var botonVolverDashboard: Button
     private lateinit var botonCompartirNFC: Button
     private lateinit var botonCompartirBt: Button
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,12 +43,43 @@ class CompartirDashboard : AppCompatActivity() {
             startActivity(intent)
         }
         botonCompartirNFC.setOnClickListener {
-            val intent = Intent(this, DashboardNFC::class.java)
-            startActivity(intent)
+            var auth = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+            var db = FirebaseFirestore.getInstance()
+            db.collection("informacionUsuarios").document(auth).get().addOnSuccessListener { document ->
+                if (document.exists()) {
+                    db.collection("datosMedicos").document(auth).get().addOnSuccessListener { document ->
+                        if (document.exists()) {
+                            val intent = Intent(this, DashboardNFC::class.java)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(this, "No se encontraron datos registrados para compartir", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+                else {
+                    Toast.makeText(this, "No se encontraron datos registrados para compartir", Toast.LENGTH_SHORT).show()
+                }
+            }
+
         }
         botonCompartirBt.setOnClickListener {
-            val intent = Intent(this, DashboardBluetooth::class.java)
-            startActivity(intent)
+            var auth = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+            var db = FirebaseFirestore.getInstance()
+            db.collection("informacionUsuarios").document(auth).get().addOnSuccessListener { document ->
+                if (document.exists()) {
+                    db.collection("datosMedicos").document(auth).get().addOnSuccessListener { document ->
+                        if (document.exists()) {
+                            val intent = Intent(this, DashboardBluetooth::class.java)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(this, "No se encontraron datos registrados para compartir", Toast.LENGTH_SHORT).show()
+                            }
+                       }
+                    }
+                else {
+                    Toast.makeText(this, "No se encontraron datos registrados para compartir", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
     }
