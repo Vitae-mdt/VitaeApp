@@ -60,15 +60,19 @@ class DashboardNFC : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_dashboard_nfc)
         val binding = ActivityDashboardNfcBinding.inflate(layoutInflater)
+
+
         //vincula los elementos de la vista con las variables correspondientes
         botonVolverDashboard = findViewById(R.id.boton_volver_dashboard)
         ayudaNfc = findViewById(R.id.ayuda_nfc)
         botonEscribirNfc = findViewById(R.id.boton_escribir_NFC)
         botonLeerDatosNfc = findViewById(R.id.boton_leer_datos_NFC)
-//        botonCompartirNfc = findViewById(R.id.boton_compartir_nfc)
+
 
         //inicializa las variables auth y AdaptadorNFC que se conecta a la base de datos de firebase
         auth = FirebaseAuth.getInstance()
+
+
         // la variable AdaptadorNFC se inicializa con el adaptador NFC del dispositivo
         // si el dispositivo no soporta NFC se muestra un mensaje y se cierra la actividad
         AdaptadorNFC = NfcAdapter.getDefaultAdapter(this)
@@ -76,11 +80,16 @@ class DashboardNFC : AppCompatActivity() {
             ayudaNfc.text = "El dispositivo no soporta NFC"
             finish()
         }
+
+
         //verifica cuando el dispositivo soporta NFC y si esta activado
         if (!AdaptadorNFC.isEnabled) {
             // NFC está desactivado, pide al usuario que lo active
             mostrarDialogoActivarNFC()
         }
+
+
+
         // Crea un Intent para la actividad actual y configura flags para evitar múltiples instancias y manejar intents repetidos (FLAG_ACTIVITY_SINGLE_TOP).
         // Luego, crea un PendingIntent que contiene este Intent, usando flags específicas para la versión de Android (FLAG_MUTABLE para Android 12+).
         // El PendingIntent se utilizará para manejar eventos NFC.
@@ -90,6 +99,8 @@ class DashboardNFC : AppCompatActivity() {
         } else {
             PendingIntent.FLAG_UPDATE_CURRENT
         }
+
+
         //se declara la variable pendingIntent que contiene el PendingIntent creado anteriormente
         pendingIntent = PendingIntent.getActivity(this, 0, intent, flags)
 
@@ -134,6 +145,7 @@ class DashboardNFC : AppCompatActivity() {
         super.onNewIntent(intent)
         manejaNFC(intent)
     }
+
     //// Habilita el despachador en primer plano para que esta actividad reciba los intents de descubrimiento de etiquetas NFC.
     override fun onResume() {
         super.onResume()
@@ -179,10 +191,6 @@ class DashboardNFC : AppCompatActivity() {
          ndef.connect()
          val uid = auth.currentUser?.uid ?: return
          val encriptado = encriptadoAES(uid.toByteArray())
-//         val longitud = encriptado.size
-//         Toast.makeText(this, "Longitud del UID: $longitud", Toast.LENGTH_SHORT).show()
-//         val datosEncriptados = encriptado.joinToString("") { "%02x".format(it) }
-//         Toast.makeText(this, "Datos encriptados: $datosEncriptados", Toast.LENGTH_SHORT).show()
          val codificacionUID = Base64.getEncoder().encodeToString(encriptado)
          val ndefRecord = NdefRecord.createTextRecord(null, codificacionUID)
          val ndefMessage = NdefMessage(ndefRecord)
@@ -285,22 +293,5 @@ class DashboardNFC : AppCompatActivity() {
         cifrado.init(Cipher.DECRYPT_MODE, llave, vector)
         return cifrado.doFinal(data)
     }
-//
-//    private fun comparentirNfc() {
-//        val uid = auth.currentUser?.uid ?: run {
-//            Toast.makeText(this, "No se pudo obtener el UID del usuario", Toast.LENGTH_SHORT).show()
-//            return
-//        }
-//        val encriptado = encriptadoAES(uid.toByteArray())
-//        val codificacionUID = Base64.getEncoder().encodeToString(encriptado)
-//        val ndefRecord = NdefRecord.createTextRecord(null, codificacionUID)
-//        val ndefMessage = NdefMessage(ndefRecord)
-//
-//        val adaptadorNFC = NfcAdapter.getDefaultAdapter(this)
-//        adaptadorNFC.setNdefPushMessageCallback(this, this)
-//        Toast.makeText(this, "Acerca el dispositivo al lector para compartir el ID", Toast.LENGTH_SHORT).show()
-//
-//
-//    }
 }
 
